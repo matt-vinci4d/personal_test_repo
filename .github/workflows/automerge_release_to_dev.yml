@@ -38,7 +38,7 @@ jobs:
           echo "HEAD_SHA=$HEAD_SHA" >> $GITHUB_ENV
           
           # Get all commits in the PR
-          COMMITS=$(gh pr view ${{ github.event.pull_request.number }} --json commits --jq '.commits[].oid')
+          COMMITS=$(gh pr view ${{ github.event.pull_request.number }} --json commits --jq '.commits[] | .oid')
           echo "COMMITS<<EOF" >> $GITHUB_ENV
           echo "$COMMITS" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
