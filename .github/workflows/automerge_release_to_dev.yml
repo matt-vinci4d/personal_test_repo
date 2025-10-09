@@ -1,0 +1,48 @@
+name: automerge_release_to_dev
+
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - 'release/*' # Trigger on pushes to any branch starting with 'release/'
+
+env:
+  SHORT_SHA: $(echo "git rev-parse --short HEAD")
+
+jobs:
+  do-not-automerge:
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'do-not-automerge') }}
+    name: Prevent Automerging
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check for label
+        run: |
+          echo "Pull request is labeled as 'do-not-automerge'"
+          echo "This workflow fails so that the pull request cannot be merged"
+          exit 1
+  automerge:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Get Short SHA
+        run: echo "SHORT_SHA=$(echo ${{ github.event.pull_request.merge_commit_sha }} | cut -c1-7)" >> $GITHUB_ENV
+      - name: Create Pull Request
+        id: create_pr
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: 'Merge release PR $SHORT_SHA into dev'
+          title: 'Release PR $SHORT_SHA into dev'
+          body: 'Automated PR to merge $SHORT_SHA from the release branch into dev.'
+          base: main
+      - name: Enable Auto-Merge for the PR
+        if: steps.create_pr.outputs.pull-request-number # Only run if a PR was created
+        run: gh pr merge --merge --auto "1"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
