@@ -39,7 +39,9 @@ jobs:
           
           # Get all commits in the PR
           COMMITS=$(gh pr view ${{ github.event.pull_request.number }} --json commits --jq '.commits[].oid' | cut -c1-7)
-          echo "COMMITS=$COMMITS" >> $GITHUB_ENV
+          echo "COMMITS<<EOF" >> $GITHUB_ENV
+          echo "$COMMITS" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
           
           # Count commits
           COMMIT_COUNT=$(echo "$COMMITS" | wc -l)
