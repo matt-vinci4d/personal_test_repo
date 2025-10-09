@@ -8,7 +8,7 @@ on:
       - 'release/*' # Trigger on pushes to any branch starting with 'release/'
 
 env:
-  SHORT_SHA: $(echo "git rev-parse --short HEAD")
+  SHORT_SHA: $(echo ${{ github.event.pull_request.merge_commit_sha }} | cut -c1-7)
 
 jobs:
   do-not-automerge:
@@ -31,15 +31,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Get Short SHA
-        run: echo "SHORT_SHA=$(echo ${{ github.event.pull_request.merge_commit_sha }} | cut -c1-7)" >> $GITHUB_ENV
+        run: echo ${{ "env.SHORT_SHA" }}
       - name: Create Pull Request
         id: create_pr
         uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: 'Merge release PR $SHORT_SHA into dev'
-          title: 'Release PR $SHORT_SHA into dev'
-          body: 'Automated PR to merge $SHORT_SHA from the release branch into dev.'
+          commit-message: 'Merge release PR ${{ env.SHORT_SHA }} into dev'
+          title: 'Release PR ${{ env.SHORT_SHA }} into dev'
+          body: 'Automated PR to merge ${{ env.SHORT_SHA }} from the release branch into dev.'
           base: main
       - name: Enable Auto-Merge for the PR
         if: steps.create_pr.outputs.pull-request-number # Only run if a PR was created
