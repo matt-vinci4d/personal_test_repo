@@ -67,7 +67,7 @@ jobs:
             ```
             
             This PR contains all commits from the merged release PR.
-          base: dev
+          base: main
       - name: Enable Auto-Merge for the PR
         if: steps.create_pr.outputs.pull-request-number # Only run if a PR was created
         run: gh pr merge --merge --auto "1"
