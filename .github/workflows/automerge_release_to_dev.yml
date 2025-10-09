@@ -7,9 +7,6 @@ on:
     branches:
       - 'release/*' # Trigger on pushes to any branch starting with 'release/'
 
-env:
-  SHORT_SHA: $(echo ${{ github.event.pull_request.merge_commit_sha }} | cut -c1-7)
-
 jobs:
   do-not-automerge:
     if: ${{ contains(github.event.pull_request.labels.*.name, 'do-not-automerge') }}
