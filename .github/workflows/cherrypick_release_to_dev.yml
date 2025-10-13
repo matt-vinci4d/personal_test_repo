@@ -1,4 +1,4 @@
-name: automerge_release_to_dev
+name: cherrypick_release_to_dev
 
 on:
   pull_request:
