@@ -17,6 +17,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+      - name: Dump GitHub event
+        run: echo "${{ toJson(github.event) }}"
       - name: Check if PR exists
         id: check_for_pr
         env:
