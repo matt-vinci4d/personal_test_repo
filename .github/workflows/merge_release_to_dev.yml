@@ -25,7 +25,7 @@ jobs:
           prs=$(gh pr list \
               --repo "$GITHUB_REPOSITORY" \
               --head ${{ github.event.pull_request.base.ref }} \
-              --base 'dev')
+              --base 'main')
           if ((prs > 0)); then
               echo "PR already active"
               exit 1
