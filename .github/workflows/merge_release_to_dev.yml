@@ -34,7 +34,7 @@ jobs:
         run: |
           # Get branch ref
           BRANCH_REF=$(echo ${{ github.event.pull_request.base.ref }})
-          echo "BRANCH_REF=$"BRANCH_REF" >> $GITHUB_ENV
+          echo "BRANCH_REF=$BRANCH_REF" >> $GITHUB_ENV
           
           # Get merge commit SHA (short)
           MERGE_SHA=$(echo ${{ github.event.pull_request.merge_commit_sha }} | cut -c1-7)
