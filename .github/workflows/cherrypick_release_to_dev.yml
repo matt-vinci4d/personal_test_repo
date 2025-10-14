@@ -5,7 +5,7 @@ on:
     types:
       - closed
     branches:
-      - 'release/*' # Trigger on pushes to any branch starting with 'release/'
+      - 'test/release/test/*' # Trigger on pushes to any branch starting with 'release/'
 
 jobs:
   do-not-auto-cherry-pick:
