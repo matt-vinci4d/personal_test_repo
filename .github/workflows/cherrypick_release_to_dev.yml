@@ -8,17 +8,17 @@ on:
       - 'release/*' # Trigger on pushes to any branch starting with 'release/'
 
 jobs:
-  do-not-automerge:
-    if: ${{ contains(github.event.pull_request.labels.*.name, 'do-not-automerge') }}
+  do-not-auto-cherry-pick:
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'do-not-auto-cherry-pick') }}
     name: Prevent Automerging
     runs-on: ubuntu-latest
     steps:
       - name: Check for label
         run: |
-          echo "Pull request is labeled as 'do-not-automerge'"
+          echo "Pull request is labeled as 'do-not-auto-cherry-pick'"
           echo "This workflow fails so that the pull request cannot be merged"
           exit 1
-  automerge:
+  auto-cherry-pick:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     permissions:
