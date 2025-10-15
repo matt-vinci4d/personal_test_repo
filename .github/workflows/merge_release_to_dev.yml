@@ -46,8 +46,6 @@ jobs:
           COMMIT_COUNT=$(echo "$COMMITS" | wc -l)
           echo "COMMIT_COUNT=$COMMIT_COUNT" >> $GITHUB_ENV
       - name: Create Pull Request
-        id: create_pr
         run: gh pr create --base main --title "Merge $BRANCH_REF at $HEAD_SHA to dev" --body "Merge to dev - $COMMITS"
       - name: Attempt to merge PR
-        if: steps.create_pr.outputs.pull-request-number # Only run if a PR was created
         run: gh pr merge --merge --auto ${{ steps.create_pr.outputs.pull-request-number }}
