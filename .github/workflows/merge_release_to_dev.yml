@@ -35,20 +35,10 @@ jobs:
           # Get PR head SHA (short) - this is the latest commit in the PR
           HEAD_SHA=$(echo ${{ github.event.pull_request.head.sha }} | cut -c1-7)
           echo "HEAD_SHA=$HEAD_SHA" >> $GITHUB_ENV
-          
-          # Get all commits in the PR
-          COMMITS=$(gh pr view ${{ github.event.pull_request.number }} --json commits --jq '.commits[] | .oid')
-          echo "COMMITS<<EOF" >> $GITHUB_ENV
-          echo "$COMMITS" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
-          
-          # Count commits
-          COMMIT_COUNT=$(echo "$COMMITS" | wc -l)
-          echo "COMMIT_COUNT=$COMMIT_COUNT" >> $GITHUB_ENV
       - name: Create Pull Request
         id: create_pr
-        run: gh pr create --base main --title "Merge $BRANCH_REF at $HEAD_SHA to dev" --body "Merge to dev - $COMMITS"
+        run: gh pr create --base main --title "Merge $BRANCH_REF at $HEAD_SHA to dev" --body "Merge $BRANCH_REF at $HEAD_SHA to dev"
       - name: Attempt to merge PR
         run: |
-          echo "PR ${{ steps.create_pr.outputs.pull-request-number }}"
-          gh pr merge --merge --auto
+          echo "${{ toJson(steps.create_pr) }}"
+          gh pr merge --merge --auto ${{ steps.create_pr.outputs.pull-request-number }}
