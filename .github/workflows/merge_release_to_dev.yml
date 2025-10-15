@@ -7,6 +7,9 @@ on:
     branches:
       - 'release/*' # Trigger on pushes to any branch starting with 'release/'
 
+env:
+  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 jobs:
   automerge:
     if: github.event.pull_request.merged
@@ -46,8 +49,6 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Check if PR exists
         id: check_for_pr
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           prs=$(gh pr list \
               --repo "$GITHUB_REPOSITORY" \
@@ -64,5 +65,3 @@ jobs:
       - name: Enable Auto-Merge for the PR
         if: steps.create_pr.outputs.pull-request-number # Only run if a PR was created
         run: gh pr merge --merge --auto ${{ steps.create_pr.outputs.pull-request-number }}
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
