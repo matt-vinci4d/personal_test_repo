@@ -59,7 +59,7 @@ jobs:
           fi
       - name: Create Pull Request
         id: create_pr
-        run: gh pr create --base main --title "Merge $BRANCH_REF at $HEAD_SHA to dev"
+        run: gh pr create --base main --title "Merge $BRANCH_REF at $HEAD_SHA to dev" --fill-verbose
       - name: Enable Auto-Merge for the PR
         if: steps.create_pr.outputs.pull-request-number # Only run if a PR was created
         run: gh pr merge --merge --auto ${{ steps.create_pr.outputs.pull-request-number }}
