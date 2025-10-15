@@ -49,4 +49,4 @@ jobs:
         id: create_pr
         run: gh pr create --base main --title "Merge $BRANCH_REF at $HEAD_SHA to dev" --body "Merge to dev - $COMMITS"
       - name: Attempt to merge PR
-        run: gh pr merge --merge --auto ${{ steps.create_pr.outputs.pull-request-number }}
+        run: gh pr merge --auto ${{ steps.create_pr.outputs.pull-request-number }}
