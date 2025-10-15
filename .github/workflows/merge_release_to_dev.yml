@@ -45,23 +45,9 @@ jobs:
           # Count commits
           COMMIT_COUNT=$(echo "$COMMITS" | wc -l)
           echo "COMMIT_COUNT=$COMMIT_COUNT" >> $GITHUB_ENV
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Check if PR exists
-        id: check_for_pr
-        run: |
-          prs=$(gh pr list \
-              --repo "$GITHUB_REPOSITORY" \
-              --head ${{ github.event.pull_request.base.ref }} \
-              --base 'main')
-          if ((prs > 0)); then
-              echo "PR already active"
-              gh pr edit --title "Merge $BRANCH_REF at $HEAD_SHA to dev"
-              exit 1
-          fi
       - name: Create Pull Request
         id: create_pr
-        run: gh pr create --base main --title "Merge $BRANCH_REF at $HEAD_SHA to dev"
-      - name: Enable Auto-Merge for the PR
+        run: gh pr create --base main --title "Merge $BRANCH_REF at $HEAD_SHA to dev" --body "Merge to dev - $COMMITS"
+      - name: Attempt to merge PR
         if: steps.create_pr.outputs.pull-request-number # Only run if a PR was created
         run: gh pr merge --merge --auto ${{ steps.create_pr.outputs.pull-request-number }}
