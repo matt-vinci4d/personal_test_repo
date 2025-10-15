@@ -37,6 +37,6 @@ jobs:
           echo "HEAD_SHA=$HEAD_SHA" >> $GITHUB_ENV
       - name: Create Pull Request
         id: create_pr
-        run: gh pr create --base main --title "Merge $BRANCH_REF at $HEAD_SHA to dev" --body "Merge $BRANCH_REF at $HEAD_SHA to dev" >> $GITHUB_OUTPUT
+        run: PR_NUM=$(gh pr create --base main --title "Merge $BRANCH_REF at $HEAD_SHA to dev" --body "Merge $BRANCH_REF at $HEAD_SHA to dev" --json number --jq '.number')
       - name: Attempt to merge PR
-        run: gh pr merge --merge --auto ${{ steps.create_pr.outputs }}
+        run: gh pr merge $PR_NUM --merge --auto
