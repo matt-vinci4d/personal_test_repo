@@ -28,10 +28,6 @@ jobs:
           BRANCH_REF=$(echo ${{ github.event.pull_request.base.ref }})
           echo "BRANCH_REF=$BRANCH_REF" >> $GITHUB_ENV
           
-          # Get merge commit SHA (short)
-          MERGE_SHA=$(echo ${{ github.event.pull_request.merge_commit_sha }} | cut -c1-7)
-          echo "MERGE_SHA=$MERGE_SHA" >> $GITHUB_ENV
-          
           # Get PR head SHA (short) - this is the latest commit in the PR
           HEAD_SHA=$(echo ${{ github.event.pull_request.head.sha }} | cut -c1-7)
           echo "HEAD_SHA=$HEAD_SHA" >> $GITHUB_ENV
